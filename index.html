@@ -17,7 +17,7 @@
 
     <header class="bg-blue-800 text-white shadow-md">
         <div class="max-w-4xl mx-auto px-4 py-6 text-center">
-            <h1 class="text-3xl font-bold mb-2">🏆 นครเขื่อนขันธ์เกมส์ ๒๕๖๙</h1>
+            <h1 class="text-3xl font-bold mb-2">🏆 นครเขื่อนขันธ์เกมส์ 2026</h1>
             <p class="text-blue-200">ระบบรายงานผลการแข่งขันกีฬาเครือข่ายสุขภาพสัมพันธ์</p>
         </div>
     </header>
@@ -27,30 +27,33 @@
             <button onclick="changeSport('VB_M')" id="tab_VB_M" class="tab-btn tab-active px-6 py-3 hover:bg-gray-50 transition">🏐 วอลเลย์บอล ชาย</button>
             <button onclick="changeSport('VB_W')" id="tab_VB_W" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">🏐 วอลเลย์บอล หญิง</button>
             <button onclick="changeSport('TK_M')" id="tab_TK_M" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">⚽ ตะกร้อ ชาย</button>
+            <button onclick="changeSport('TK_W')" id="tab_TK_W" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">⚽ ตะกร้อ หญิง</button>
+            <button onclick="changeSport('PT_M')" id="tab_PT_M" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">🪨 เปตอง ชาย</button>
+            <button onclick="changeSport('PT_W')" id="tab_PT_W" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">🪨 เปตอง หญิง</button>
             <button onclick="changeSport('FB_M')" id="tab_FB_M" class="tab-btn px-6 py-3 hover:bg-gray-50 transition">⚽ ฟุตบอล ชาย</button>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div class="bg-white p-5 rounded-lg shadow-sm border-t-4 border-red-500">
                 <h3 class="text-xl font-bold text-gray-700 mb-4">สาย A</h3>
-                <ul id="groupA_list" class="space-y-2">
-                    </ul>
+                <ul id="groupA_list" class="space-y-2"></ul>
             </div>
-            
             <div class="bg-white p-5 rounded-lg shadow-sm border-t-4 border-blue-500">
                 <h3 class="text-xl font-bold text-gray-700 mb-4">สาย B</h3>
-                <ul id="groupB_list" class="space-y-2">
-                    </ul>
+                <ul id="groupB_list" class="space-y-2"></ul>
             </div>
         </div>
 
-        <h2 class="text-2xl font-bold text-gray-800 mb-4" id="match_title">ผลการแข่งขันล่าสุด</h2>
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">ผลการแข่งขันล่าสุด</h2>
         <div id="matches_container" class="space-y-4">
-            </div>
+            <div class="text-center p-8 bg-white rounded-lg text-gray-500 italic animate-pulse">กำลังโหลดข้อมูลจาก Google Sheets...</div>
+        </div>
     </main>
 
     <script>
-        // Master Data
+        // *** 1. ใส่ลิงก์ CSV จาก Google Sheets ของคุณที่นี่ ***
+        const csvUrl = "ใส่ลิงก์_CSV_ของคุณที่นี่";
+
         const teams = {
             1: { name: 'อบจ.หนองบัวลำภู', color: '#e91e63' },
             2: { name: 'อำเภอโนนสัง', color: '#f97316' },
@@ -60,100 +63,82 @@
             6: { name: 'รพ.หนองบัวลำภู', color: '#22c55e' },
             7: { name: 'อำเภอศรีบุญเรือง', color: '#0ea5e9' },
             8: { name: 'อำเภอสุวรรณคูหา', color: '#1e3a8a' },
-            // ทีมผสมสำหรับฟุตบอลชาย
             99: { name: 'อ.นากลาง + อ.นาวัง', color: 'linear-gradient(to right, #ef4444, #a855f7)' } 
         };
 
         const groupings = {
             default: { groupA: [1, 2, 3, 4], groupB: [5, 6, 7, 8] },
-            football: { groupA: [1, 2, 99], groupB: [5, 6, 7, 8] } // เงื่อนไขพิเศษ ฟุตบอลชาย
+            football: { groupA: [1, 2, 99], groupB: [5, 6, 7, 8] }
         };
 
-        // Mockup Matches Data
-        const mockupMatches = {
-            'VB_M': [
-                { t1: 1, t2: 2, s1: 0, s2: 2, status: 'จบการแข่งขัน' },
-                { t1: 3, t2: 4, s1: 2, s2: 1, status: 'จบการแข่งขัน' }
-            ],
-            'FB_M': [
-                { t1: 1, t2: 99, s1: 1, s2: 1, status: 'กำลังแข่งขัน 🔴' },
-                { t1: 5, t2: 6, s1: 0, s2: 0, status: '15:00 น.' }
-            ]
-        };
+        let currentSport = 'VB_M';
 
-        // Function to render teams in groups
-        function renderGroups(sportId) {
-            const layout = (sportId === 'FB_M') ? groupings.football : groupings.default;
-            
-            const renderTeam = (teamId) => {
-                const t = teams[teamId];
-                const bgStyle = t.color.includes('gradient') ? `background: ${t.color};` : `background-color: ${t.color};`;
-                const whiteClass = t.isWhite ? 'dot-white' : '';
-                return `<li class="flex items-center p-2 hover:bg-gray-50 rounded"><span class="color-dot ${whiteClass}" style="${bgStyle}"></span> ${t.name}</li>`;
-            };
+        async function fetchData() {
+            if (csvUrl.includes("ใส่ลิงก์")) return; // ข้ามถ้ายังไม่ได้ใส่ลิงก์
 
-            document.getElementById('groupA_list').innerHTML = layout.groupA.map(renderTeam).join('');
-            document.getElementById('groupB_list').innerHTML = layout.groupB.map(renderTeam).join('');
+            try {
+                const res = await fetch(csvUrl);
+                const csvText = await res.text();
+                const rows = csvText.split('\n').slice(1);
+                
+                const matches = rows.map(row => {
+                    const col = row.split(',');
+                    return { sport_id: col[0]?.trim(), t1: col[1]?.trim(), t2: col[2]?.trim(), s1: col[3]?.trim(), s2: col[4]?.trim(), status: col[5]?.trim() };
+                }).filter(m => m.sport_id === currentSport);
+
+                renderMatches(matches);
+            } catch (e) {
+                console.error("Fetch Error:", e);
+            }
         }
 
-        // Function to render match cards
-        function renderMatches(sportId) {
-            const matches = mockupMatches[sportId] || [];
+        function renderMatches(matches) {
             const container = document.getElementById('matches_container');
-            
-            if(matches.length === 0) {
-                container.innerHTML = '<div class="text-center p-8 bg-white rounded-lg text-gray-500">ยังไม่มีข้อมูลการแข่งขัน</div>';
+            if (matches.length === 0) {
+                container.innerHTML = '<div class="text-center p-8 bg-white rounded-lg text-gray-500">ไม่พบข้อมูลการแข่งขันประเภทนี้</div>';
                 return;
             }
 
             container.innerHTML = matches.map(m => {
-                const t1 = teams[m.t1];
-                const t2 = teams[m.t2];
-                const isLive = m.status.includes('กำลังแข่งขัน');
-                const statusColor = isLive ? 'text-red-500 font-bold animate-pulse' : 'text-gray-500 text-sm';
+                const t1 = teams[m.t1] || { name: '?', color: '#ccc' };
+                const t2 = teams[m.t2] || { name: '?', color: '#ccc' };
+                const isLive = m.status?.includes('กำลังแข่งขัน');
                 
-                const t1Style = t1.color.includes('gradient') ? `background: ${t1.color};` : `background-color: ${t1.color};`;
-                const t2Style = t2.color.includes('gradient') ? `background: ${t2.color};` : `background-color: ${t2.color};`;
-
                 return `
-                <div class="bg-white p-4 rounded-xl shadow-sm flex flex-col md:flex-row justify-between items-center border border-gray-100 hover:shadow-md transition">
-                    <div class="text-center md:text-left mb-4 md:mb-0 w-full md:w-2/5">
-                        <div class="flex items-center justify-center md:justify-start">
-                            <span class="color-dot ${t1.isWhite ? 'dot-white' : ''}" style="${t1Style}"></span>
-                            <span class="font-bold text-lg text-gray-800">${t1.name}</span>
-                        </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm flex justify-between items-center border border-gray-100">
+                    <div class="w-2/5 flex items-center">
+                        <span class="color-dot ${t1.isWhite?'dot-white':''}" style="background:${t1.color}"></span>
+                        <span class="font-bold text-sm md:text-lg">${t1.name}</span>
                     </div>
-                    
-                    <div class="flex flex-col items-center w-full md:w-1/5">
-                        <div class="bg-gray-100 px-4 py-2 rounded-lg text-2xl font-black text-blue-900 tracking-widest shadow-inner">
-                            ${m.s1} - ${m.s2}
-                        </div>
-                        <div class="mt-2 ${statusColor}">${m.status}</div>
+                    <div class="w-1/5 text-center">
+                        <div class="bg-gray-100 px-3 py-1 rounded font-black text-xl">${m.s1} - ${m.s2}</div>
+                        <div class="text-xs mt-1 ${isLive?'text-red-500 animate-pulse font-bold':'text-gray-400'}">${m.status}</div>
                     </div>
-
-                    <div class="text-center md:text-right mt-4 md:mt-0 w-full md:w-2/5">
-                        <div class="flex items-center justify-center md:justify-end">
-                            <span class="font-bold text-lg text-gray-800">${t2.name}</span>
-                            <span class="color-dot ml-2 ${t2.isWhite ? 'dot-white' : ''}" style="${t2Style}"></span>
-                        </div>
+                    <div class="w-2/5 flex items-center justify-end">
+                        <span class="font-bold text-sm md:text-lg text-right">${t2.name}</span>
+                        <span class="color-dot ml-2 ${t2.isWhite?'dot-white':''}" style="background:${t2.color}"></span>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        // Handle Tab Switching
-        function changeSport(sportId) {
-            // Update Tab styles
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
-            document.getElementById('tab_' + sportId).classList.add('tab-active');
-
-            // Render content
-            renderGroups(sportId);
-            renderMatches(sportId);
+        function changeSport(id) {
+            currentSport = id;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab_'+id).classList.add('tab-active');
+            
+            // แสดงรายชื่อทีมตามประเภทกีฬา
+            const layout = (id === 'FB_M') ? groupings.football : groupings.default;
+            const renderT = (tid) => `<li class="flex items-center text-sm p-1"><span class="color-dot ${teams[tid].isWhite?'dot-white':''}" style="background:${teams[tid].color}"></span>${teams[tid].name}</li>`;
+            document.getElementById('groupA_list').innerHTML = layout.groupA.map(renderT).join('');
+            document.getElementById('groupB_list').innerHTML = layout.groupB.map(renderT).join('');
+            
+            fetchData();
         }
 
-        // Initialize default view
+        // เริ่มต้น และดึงข้อมูลทุก 30 วินาที
         changeSport('VB_M');
+        setInterval(fetchData, 30000);
     </script>
 </body>
 </html>
