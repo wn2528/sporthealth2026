@@ -25,6 +25,7 @@
     </header>
 
     <main class="max-w-6xl mx-auto px-4 mt-6">
+        
         <div class="bg-white rounded-xl shadow-sm overflow-x-auto flex whitespace-nowrap mb-6 p-2 gap-2 border border-gray-200">
             <button onclick="changeSport('VB_M')" id="tab_VB_M" class="tab-btn px-5 py-2.5 rounded-lg transition hover:bg-blue-50 text-gray-600">🏐 วอลเลย์บอล ชาย</button>
             <button onclick="changeSport('VB_W')" id="tab_VB_W" class="tab-btn px-5 py-2.5 rounded-lg transition hover:bg-blue-50 text-gray-600">🏐 วอลเลย์บอล หญิง</button>
@@ -36,6 +37,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
             <div class="lg:col-span-5 flex flex-col gap-6">
                 <div class="bg-gradient-to-br from-yellow-50 to-orange-100 rounded-2xl shadow-md border border-yellow-200 p-5">
                     <h2 class="text-xl font-black text-orange-900 mb-4 flex items-center uppercase">
@@ -43,6 +45,7 @@
                     </h2>
                     <div id="final_container" class="space-y-4"></div>
                 </div>
+
                 <div class="bg-white rounded-2xl shadow-md border border-blue-100 p-5">
                     <h2 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
                         <span class="w-2 h-6 bg-blue-600 rounded-full mr-2"></span> รอบรองชนะเลิศ
@@ -54,7 +57,9 @@
             <div class="lg:col-span-7 space-y-6">
                 <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h2 class="font-bold text-lg text-gray-800 flex items-center">📊 ตารางคะแนนรอบแบ่งกลุ่ม</h2>
+                        <h2 class="font-bold text-lg text-gray-800 flex items-center">
+                             📊 ตารางคะแนนรอบแบ่งกลุ่ม
+                        </h2>
                     </div>
                     <div class="p-4 overflow-x-auto">
                         <div id="standings_container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
@@ -68,6 +73,7 @@
                     <div id="all_matches_container" class="space-y-3"></div>
                 </div>
             </div>
+            
         </div>
     </main>
 
@@ -82,31 +88,16 @@
             'FB_M': 'ฟุตบอล ชาย'
         };
 
-        // เพิ่มการรองรับชื่อย่อ เผื่อเจ้าหน้าที่พิมพ์สั้นๆ
         const teamStyles = {
             'อบจ.หนองบัวลำภู': { color: '#e91e63' },
             'อำเภอโนนสัง': { color: '#f97316' },
             'อำเภอนากลาง': { color: '#ef4444' },
             'อำเภอนาวัง': { color: '#a855f7' },
             'สสจ.+ เมือง': { color: '#ffffff', isWhite: true },
-            'สสจ.+เมือง': { color: '#ffffff', isWhite: true },
             'รพ.หนองบัวลำภู': { color: '#22c55e' },
             'อำเภอศรีบุญเรือง': { color: '#0ea5e9' },
             'อำเภอสุวรรณคูหา': { color: '#1e3a8a' },
-            'อ.นากลาง + อ.นาวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' },
-            'อำเภอนากลางวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' } // รองรับชื่อที่คุณเจพิมพ์
-        };
-
-        // ล็อกรายชื่อทีมให้แสดงในตารางคะแนนเสมอ
-        const groupings = {
-            default: {
-                'A': ['อบจ.หนองบัวลำภู', 'อำเภอโนนสัง', 'อำเภอนากลาง', 'อำเภอนาวัง'],
-                'B': ['สสจ.+ เมือง', 'รพ.หนองบัวลำภู', 'อำเภอศรีบุญเรือง', 'อำเภอสุวรรณคูหา']
-            },
-            football: {
-                'A': ['อบจ.หนองบัวลำภู', 'อำเภอโนนสัง', 'อำเภอนากลางวัง'], // ล็อกชื่อนากลางวังไว้ในสาย A
-                'B': ['สสจ.+ เมือง', 'รพ.หนองบัวลำภู', 'อำเภอศรีบุญเรือง', 'อำเภอสุวรรณคูหา']
-            }
+            'อ.นากลาง + อ.นาวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' }
         };
 
         let currentSport = 'VB_M';
@@ -164,31 +155,25 @@
                         <span class="text-xs font-bold leading-tight ${t2.isPlaceholder?'text-gray-300':''}">${m.t2}</span>
                     </div>
                 </div>
-                <div class="mt-3 text-center text-[10px] ${isLive?'text-red-500 font-bold live-pulse rounded-full py-0.5 bg-red-50':'text-gray-400'}">${m.status || '-'}</div>
+                <div class="mt-3 text-center text-[10px] ${isLive?'text-red-500 font-bold live-pulse rounded-full py-0.5 bg-red-50':'text-gray-400'}">${m.status}</div>
             </div>`;
         }
 
         function renderStandings(matches) {
             const container = document.getElementById('standings_container');
             container.innerHTML = '';
-            const layout = currentSport === 'FB_M' ? groupings.football : groupings.default;
             
             ['A', 'B'].forEach(group => {
                 const groupMatches = matches.filter(m => m.round === group);
                 const stats = {};
 
-                // 1. นำรายชื่อทีมตั้งต้นใส่ในตารางก่อนเสมอ (แม้ยังไม่แข่งตารางก็จะไม่โล่ง)
-                if (layout[group]) {
-                    layout[group].forEach(t => { stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; });
-                }
-
-                // 2. เผื่อมีชื่อทีมอื่นๆ จาก CSV ที่ไม่ได้อยู่ในตั้งต้น
+                // ค้นหาทีมทั้งหมดในสาย
                 groupMatches.forEach(m => {
-                    [m.t1, m.t2].forEach(t => { if(t && !stats[t]) stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; });
+                    [m.t1, m.t2].forEach(t => { if(!stats[t]) stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; });
                 });
 
-                // 3. คำนวณแต้ม (จะคำนวณก็ต่อเมื่อมีคำว่า "จบ" ในสถานะ)
-                groupMatches.filter(m => m.status && m.status.includes('จบ')).forEach(m => {
+                // คำนวณเฉพาะแมตช์ที่จบแล้ว
+                groupMatches.filter(m => m.status === 'จบการแข่งขัน').forEach(m => {
                     stats[m.t1].p++; stats[m.t2].p++;
                     if(m.s1 > m.s2) { stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++; }
                     else if(m.s2 > m.s1) { stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++; }
@@ -215,12 +200,12 @@
                                     <td class="py-2 pl-2 font-bold flex items-center">
                                         <span class="w-3 inline-block text-gray-300 font-normal mr-1">${i+1}</span>
                                         <span class="color-dot w-2 h-2 ${stl.isWhite?'border':''}" style="background:${stl.color}"></span>
-                                        <span class="truncate w-24 md:w-auto">${s.name}</span>
+                                        <span class="truncate w-24">${s.name}</span>
                                     </td>
                                     <td class="text-center text-green-600">${s.w}</td>
                                     <td class="text-center font-black text-blue-700 bg-blue-50/20">${s.pts}</td>
                                 </tr>`;
-                            }).join('')}
+                            }).join('') || '<tr><td colspan="3" class="py-4 text-center text-gray-300">รอยืนยันสาย</td></tr>'}
                         </tbody>
                     </table>
                 </div>`;
@@ -242,18 +227,14 @@
 
         function changeSport(id) {
             currentSport = id;
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('tab-active');
-                b.classList.add('text-gray-600');
-            });
-            const activeTab = document.getElementById('tab_'+id);
-            activeTab.classList.add('tab-active');
-            activeTab.classList.remove('text-gray-600');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+            document.getElementById('tab_'+id).classList.add('tab-active');
             fetchData();
         }
 
+        // เริ่มต้นระบบ
         changeSport('VB_M');
-        setInterval(fetchData, 30000); 
+        setInterval(fetchData, 30000); // อัปเดตทุก 30 วินาที
     </script>
 </body>
 </html>
