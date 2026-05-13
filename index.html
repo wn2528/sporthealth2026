@@ -116,7 +116,7 @@
         }
 
         async function fetchData() {
-            if (csvUrl.includes("https://docs.google.com/spreadsheets/d/e/2PACX-1vSE56LtlPBfLIudlMLOcdGssPUQ2SzBZG7GF48ecmrxXT9I2nHaypoEi5rGNfCh-w2n1Uxh-x1U7GpN/pubhtml")) return;
+            if (csvUrl.includes("ใส่ลิงก์")) return;
             try {
                 const res = await fetch(csvUrl);
                 const csvText = await res.text();
