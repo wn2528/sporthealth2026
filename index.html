@@ -9,7 +9,6 @@
     <style>
         body { 
             font-family: 'Sarabun', sans-serif; 
-            /* พื้นหลังสไตล์สปอร์ต (Speed lines) */
             background-color: #f1f5f9;
             background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(200, 210, 230, 0.2) 10px, rgba(200, 210, 230, 0.2) 20px);
         }
@@ -39,49 +38,35 @@
             transform: rotate(45deg);
             animation: shine 3s infinite;
         }
-        @keyframes shine {
-            0% { left: -100%; top: -100%; }
-            20% { left: 100%; top: 100%; }
-            100% { left: 100%; top: 100%; }
-        }
-        @keyframes floatLogo {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
+        @keyframes shine { 0% { left: -100%; top: -100%; } 20% { left: 100%; top: 100%; } 100% { left: 100%; top: 100%; } }
+        @keyframes floatLogo { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
 
-        /* แอนิเมชันของมัสคอต */
+        /* แอนิเมชันของมัสคอตและเครื่องเล่นเพลง */
         .mascot-container {
-            position: fixed;
-            bottom: -10px;
-            right: 10px;
-            width: 140px;
-            z-index: 50;
+            position: fixed; bottom: -10px; right: 10px; width: 140px; z-index: 50;
             animation: bounceMascot 3s ease-in-out infinite;
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
-            pointer-events: none; /* ไม่บังการกดปุ่ม */
+            pointer-events: none;
         }
-        @keyframes bounceMascot {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-        }
+        @keyframes bounceMascot { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-15px) rotate(2deg); } }
         
-        /* ซ่อนมัสคอตในจอมือถือเล็กๆ เพื่อไม่ให้บังข้อมูล */
+        .cd-spin { animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
         @media (max-width: 640px) {
             .mascot-container { width: 100px; opacity: 0.8; }
+            .music-player-widget { width: 220px; bottom: 10px; left: 10px; }
         }
     </style>
 </head>
-<body class="pb-16 relative">
+<body class="pb-20 relative">
 
     <header class="bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-900 text-white shadow-xl border-b-4 border-yellow-400 relative overflow-hidden">
         <div class="absolute inset-0 bg-white opacity-5 mix-blend-overlay"></div>
-        
         <div class="max-w-6xl mx-auto px-4 py-8 relative z-10 flex flex-col md:flex-row items-center justify-center gap-6">
             <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full glossy-logo flex-shrink-0">
                 <img src="โลโก้ สสจ หนองบัวลำภู.jpg" alt="สสจ" class="w-full h-full object-cover rounded-full p-1" onerror="this.src='https://via.placeholder.com/100?text=SSJ'">
             </div>
-
             <div class="text-center">
                 <h1 class="text-3xl md:text-5xl font-extrabold mb-2 tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-200" style="text-shadow: 0px 4px 10px rgba(0,0,0,0.5);">
                     🏆 นครเขื่อนขันธ์เกมส์ 2026
@@ -93,7 +78,6 @@
                     (แข่งขันระหว่างวันที่ 6 - 16 พ.ค. 2569)
                 </p>
             </div>
-
             <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full glossy-logo flex-shrink-0">
                 <img src="โลโก้ อบจ หนองบัวลำภู.jpg" alt="อบจ" class="w-full h-full object-cover rounded-full p-1" onerror="this.src='https://via.placeholder.com/100?text=OBJ'">
             </div>
@@ -147,6 +131,22 @@
             </div>
         </div>
     </main>
+
+    <div class="music-player-widget fixed bottom-6 left-6 z-50 bg-white/80 backdrop-blur-md rounded-2xl shadow-xl border border-blue-100 p-3 w-72 transition hover:bg-white">
+        <div class="flex items-center gap-3 mb-2">
+            <div class="w-10 h-10 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-full flex items-center justify-center shadow-inner cd-spin flex-shrink-0">
+                <div class="w-3 h-3 bg-white rounded-full"></div>
+            </div>
+            <div>
+                <p class="text-sm font-bold text-blue-900 leading-tight">COOL Fahrenheit</p>
+                <p class="text-[10px] text-gray-500">ฟังเพลงชิลๆ ระหว่างลุ้นผล</p>
+            </div>
+        </div>
+        <div class="rounded-lg overflow-hidden border border-gray-200 bg-gray-50 h-[80px]">
+            <iframe src="https://www.coolism.net/" width="100%" height="100%" frameborder="0" allow="autoplay; encrypted-media" class="scale-[0.85] origin-top-left w-[120%] h-[120%]"></iframe>
+        </div>
+        <p class="text-[9px] text-gray-400 mt-2 leading-tight text-center">* หากเสียงไม่เล่นอัตโนมัติ กรุณากดปุ่ม Play</p>
+    </div>
 
     <div class="mascot-container">
         <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
