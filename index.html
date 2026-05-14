@@ -7,26 +7,101 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Sarabun', sans-serif; background-color: #f1f5f9; }
+        body { 
+            font-family: 'Sarabun', sans-serif; 
+            /* พื้นหลังสไตล์สปอร์ต (Speed lines) */
+            background-color: #f1f5f9;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(200, 210, 230, 0.2) 10px, rgba(200, 210, 230, 0.2) 20px);
+        }
         .tab-active { background-color: #1e40af; color: white; font-weight: bold; }
         .color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
         .dot-white { border: 1px solid #cbd5e1; }
+        
+        /* แอนิเมชันสถานะกำลังแข่ง */
         .live-pulse { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        /* แอนิเมชันเงาแวววาวของโลโก้ */
+        .glossy-logo {
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.8);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5), 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            animation: floatLogo 4s ease-in-out infinite;
+        }
+        .glossy-logo::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; top: -100%; }
+            20% { left: 100%; top: 100%; }
+            100% { left: 100%; top: 100%; }
+        }
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* แอนิเมชันของมัสคอต */
+        .mascot-container {
+            position: fixed;
+            bottom: -10px;
+            right: 10px;
+            width: 140px;
+            z-index: 50;
+            animation: bounceMascot 3s ease-in-out infinite;
+            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2));
+            pointer-events: none; /* ไม่บังการกดปุ่ม */
+        }
+        @keyframes bounceMascot {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+        
+        /* ซ่อนมัสคอตในจอมือถือเล็กๆ เพื่อไม่ให้บังข้อมูล */
+        @media (max-width: 640px) {
+            .mascot-container { width: 100px; opacity: 0.8; }
+        }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-16 relative">
 
-    <header class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white shadow-xl border-b-4 border-yellow-400">
-        <div class="max-w-6xl mx-auto px-4 py-8 text-center">
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-2 tracking-tight">🏆 นครเขื่อนขันธ์เกมส์ 2026</h1>
-            <p class="text-blue-200 text-lg">ระบบรายงานผลและตารางคะแนนการแข่งขันกีฬาเครือข่ายสุขภาพสัมพันธ์</p>
+    <header class="bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-900 text-white shadow-xl border-b-4 border-yellow-400 relative overflow-hidden">
+        <div class="absolute inset-0 bg-white opacity-5 mix-blend-overlay"></div>
+        
+        <div class="max-w-6xl mx-auto px-4 py-8 relative z-10 flex flex-col md:flex-row items-center justify-center gap-6">
+            <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full glossy-logo flex-shrink-0">
+                <img src="โลโก้ สสจ หนองบัวลำภู.jpg" alt="สสจ" class="w-full h-full object-cover rounded-full p-1" onerror="this.src='https://via.placeholder.com/100?text=SSJ'">
+            </div>
+
+            <div class="text-center">
+                <h1 class="text-3xl md:text-5xl font-extrabold mb-2 tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-blue-200" style="text-shadow: 0px 4px 10px rgba(0,0,0,0.5);">
+                    🏆 นครเขื่อนขันธ์เกมส์ 2026
+                </h1>
+                <p class="text-yellow-300 text-lg md:text-xl font-medium tracking-wide">
+                    ระบบรายงานผลและตารางคะแนนการแข่งขันกีฬาเครือข่ายสุขภาพสัมพันธ์
+                </p>
+                <p class="text-blue-200 text-md mt-1 font-light bg-black/20 inline-block px-4 py-1 rounded-full border border-blue-400/30">
+                    (แข่งขันระหว่างวันที่ 6 - 16 พ.ค. 2569)
+                </p>
+            </div>
+
+            <div class="w-20 h-20 md:w-24 md:h-24 bg-white rounded-full glossy-logo flex-shrink-0">
+                <img src="โลโก้ อบจ หนองบัวลำภู.jpg" alt="อบจ" class="w-full h-full object-cover rounded-full p-1" onerror="this.src='https://via.placeholder.com/100?text=OBJ'">
+            </div>
         </div>
     </header>
 
-    <main class="max-w-6xl mx-auto px-4 mt-6">
-        
-        <div class="bg-white rounded-xl shadow-sm overflow-x-auto flex whitespace-nowrap mb-6 p-2 gap-2 border border-gray-200">
+    <main class="max-w-6xl mx-auto px-4 mt-6 relative z-10">
+        <div class="bg-white/90 backdrop-blur rounded-xl shadow-sm overflow-x-auto flex whitespace-nowrap mb-6 p-2 gap-2 border border-gray-200">
             <button onclick="changeSport('VB_M')" id="tab_VB_M" class="tab-btn px-5 py-2.5 rounded-lg transition hover:bg-blue-50 text-gray-600">🏐 วอลเลย์บอล ชาย</button>
             <button onclick="changeSport('VB_W')" id="tab_VB_W" class="tab-btn px-5 py-2.5 rounded-lg transition hover:bg-blue-50 text-gray-600">🏐 วอลเลย์บอล หญิง</button>
             <button onclick="changeSport('TK_M')" id="tab_TK_M" class="tab-btn px-5 py-2.5 rounded-lg transition hover:bg-blue-50 text-gray-600">⚽ ตะกร้อ ชาย</button>
@@ -37,16 +112,15 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
             <div class="lg:col-span-5 flex flex-col gap-6">
-                <div class="bg-gradient-to-br from-yellow-50 to-orange-100 rounded-2xl shadow-md border border-yellow-200 p-5">
-                    <h2 class="text-xl font-black text-orange-900 mb-4 flex items-center uppercase">
+                <div class="bg-gradient-to-br from-yellow-50 to-orange-100 rounded-2xl shadow-lg border border-yellow-300 p-5 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10 text-9xl">🏆</div>
+                    <h2 class="text-xl font-black text-orange-900 mb-4 flex items-center uppercase relative z-10">
                         <span class="text-2xl mr-2">🥇</span> รอบชิงชนะเลิศ
                     </h2>
-                    <div id="final_container" class="space-y-4"></div>
+                    <div id="final_container" class="space-y-4 relative z-10"></div>
                 </div>
-
-                <div class="bg-white rounded-2xl shadow-md border border-blue-100 p-5">
+                <div class="bg-white rounded-2xl shadow-md border border-blue-200 p-5">
                     <h2 class="text-xl font-bold text-blue-900 mb-4 flex items-center">
                         <span class="w-2 h-6 bg-blue-600 rounded-full mr-2"></span> รอบรองชนะเลิศ
                     </h2>
@@ -55,27 +129,52 @@
             </div>
 
             <div class="lg:col-span-7 space-y-6">
-                <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
+                <div class="bg-white/95 backdrop-blur rounded-2xl shadow-md border border-gray-200 overflow-hidden">
                     <div class="bg-gray-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h2 class="font-bold text-lg text-gray-800 flex items-center">
-                             📊 ตารางคะแนนรอบแบ่งกลุ่ม
-                        </h2>
+                        <h2 class="font-bold text-lg text-gray-800 flex items-center">📊 ตารางคะแนนรอบแบ่งกลุ่ม</h2>
                     </div>
                     <div class="p-4 overflow-x-auto">
                         <div id="standings_container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                     </div>
                 </div>
 
-                <div>
-                    <h2 class="font-bold text-lg text-gray-800 mb-4 px-2 flex items-center">
+                <div class="bg-white/90 p-5 rounded-2xl shadow-sm border border-gray-200">
+                    <h2 class="font-bold text-lg text-gray-800 mb-4 flex items-center">
                         <span class="w-2 h-6 bg-indigo-600 rounded-full mr-2"></span> ผลการแข่งขันและตารางเวลา
                     </h2>
                     <div id="all_matches_container" class="space-y-3"></div>
                 </div>
             </div>
-            
         </div>
     </main>
+
+    <div class="mascot-container">
+        <svg viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg">
+            <g id="mascot">
+                <path d="M70 180 Q60 210 50 210 Q40 210 50 190 L75 160" fill="none" stroke="#2c3e50" stroke-width="12" stroke-linecap="round"/>
+                <path d="M120 180 Q130 210 140 210 Q150 210 140 190 L115 160" fill="none" stroke="#2c3e50" stroke-width="12" stroke-linecap="round"/>
+                <ellipse cx="95" cy="140" rx="35" ry="45" fill="#f1c40f"/>
+                <path d="M60 140 Q95 180 130 140 L120 100 L70 100 Z" fill="#3498db"/>
+                <path d="M125 120 Q160 110 160 80" fill="none" stroke="#2c3e50" stroke-width="10" stroke-linecap="round"/>
+                <path d="M65 120 Q30 110 40 80" fill="none" stroke="#2c3e50" stroke-width="10" stroke-linecap="round"/>
+                <rect x="155" y="55" width="10" height="30" fill="#7f8c8d" rx="2"/>
+                <path d="M150 55 L170 55 L165 30 L155 30 Z" fill="#e67e22"/>
+                <path d="M160 30 Q145 10 160 -5 Q175 10 160 30" fill="#e74c3c"/>
+                <path d="M160 25 Q152 10 160 2 Q168 10 160 25" fill="#f1c40f"/>
+                <ellipse cx="75" cy="40" rx="12" ry="40" fill="#ecf0f1" transform="rotate(-15 75 40)"/>
+                <ellipse cx="75" cy="40" rx="6" ry="30" fill="#f5b7b1" transform="rotate(-15 75 40)"/>
+                <ellipse cx="115" cy="40" rx="12" ry="40" fill="#ecf0f1" transform="rotate(15 115 40)"/>
+                <ellipse cx="115" cy="40" rx="6" ry="30" fill="#f5b7b1" transform="rotate(15 115 40)"/>
+                <circle cx="95" cy="85" r="35" fill="#ecf0f1"/>
+                <circle cx="82" cy="75" r="5" fill="#2c3e50"/>
+                <circle cx="108" cy="75" r="5" fill="#2c3e50"/>
+                <path d="M90 85 Q95 90 100 85" fill="none" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+                <circle cx="95" cy="120" r="12" fill="#f1c40f" stroke="#f39c12" stroke-width="3"/>
+                <path d="M70 100 L90 115" fill="none" stroke="#c0392b" stroke-width="4"/>
+                <path d="M120 100 L100 115" fill="none" stroke="#c0392b" stroke-width="4"/>
+            </g>
+        </svg>
+    </div>
 
     <script>
         // *** 1. ใส่ลิงก์ CSV ของคุณที่นี่ ***
@@ -94,17 +193,22 @@
             'อำเภอนากลาง': { color: '#ef4444' },
             'อำเภอนาวัง': { color: '#a855f7' },
             'สสจ.+ เมือง': { color: '#ffffff', isWhite: true },
+            'สสจ.+เมือง': { color: '#ffffff', isWhite: true },
             'รพ.หนองบัวลำภู': { color: '#22c55e' },
             'อำเภอศรีบุญเรือง': { color: '#0ea5e9' },
             'อำเภอสุวรรณคูหา': { color: '#1e3a8a' },
-            'อ.นากลาง + อ.นาวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' }
+            'อ.นากลาง + อ.นาวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' },
+            'อำเภอนากลางวัง': { color: 'linear-gradient(to right, #ef4444, #a855f7)' }
+        };
+
+        const groupings = {
+            default: { 'A': ['อบจ.หนองบัวลำภู', 'อำเภอโนนสัง', 'อำเภอนากลาง', 'อำเภอนาวัง'], 'B': ['สสจ.+ เมือง', 'รพ.หนองบัวลำภู', 'อำเภอศรีบุญเรือง', 'อำเภอสุวรรณคูหา'] },
+            football: { 'A': ['อบจ.หนองบัวลำภู', 'อำเภอโนนสัง', 'อำเภอนากลางวัง'], 'B': ['สสจ.+ เมือง', 'รพ.หนองบัวลำภู', 'อำเภอศรีบุญเรือง', 'อำเภอสุวรรณคูหา'] }
         };
 
         let currentSport = 'VB_M';
 
-        function getTeam(name) {
-            return teamStyles[name] || { color: '#e2e8f0', isPlaceholder: true };
-        }
+        function getTeam(name) { return teamStyles[name] || { color: '#e2e8f0', isPlaceholder: true }; }
 
         async function fetchData() {
             if (csvUrl.includes("ใส่ลิงก์")) return;
@@ -135,77 +239,66 @@
             const isLive = m.status === 'กำลังแข่งขัน 🔴';
             const t1 = getTeam(m.t1);
             const t2 = getTeam(m.t2);
-            
             return `
-            <div class="bg-white p-4 rounded-xl shadow-sm border ${highlight?'border-orange-300':'border-gray-100'}">
-                <div class="flex justify-between text-[10px] text-gray-400 mb-3 font-medium uppercase tracking-wider">
+            <div class="bg-white p-4 rounded-xl shadow-sm border ${highlight?'border-orange-300':'border-gray-100'} hover:shadow-md transition">
+                <div class="flex justify-between text-[10px] text-gray-500 mb-3 font-medium uppercase">
                     <span>🗓️ ${m.date || '-'} | 🕒 ${m.time || '-'}</span>
-                    <span class="bg-gray-100 px-2 py-0.5 rounded text-blue-700 font-bold">${m.round}</span>
+                    <span class="bg-indigo-50 px-2 py-0.5 rounded text-indigo-700 font-bold border border-indigo-100">${m.round}</span>
                 </div>
                 <div class="flex items-center justify-between">
                     <div class="w-[42%] text-center flex flex-col items-center">
-                        <span class="w-3 h-3 rounded-full mb-1 ${t1.isWhite?'border':''}" style="background:${t1.color}"></span>
+                        <span class="w-3 h-3 rounded-full mb-1 shadow-sm ${t1.isWhite?'border':''}" style="background:${t1.color}"></span>
                         <span class="text-xs font-bold leading-tight ${t1.isPlaceholder?'text-gray-300':''}">${m.t1}</span>
                     </div>
                     <div class="w-[16%] text-center">
                         <div class="text-xl font-black text-blue-900 leading-none">${m.s1}-${m.s2}</div>
                     </div>
                     <div class="w-[42%] text-center flex flex-col items-center">
-                        <span class="w-3 h-3 rounded-full mb-1 ${t2.isWhite?'border':''}" style="background:${t2.color}"></span>
+                        <span class="w-3 h-3 rounded-full mb-1 shadow-sm ${t2.isWhite?'border':''}" style="background:${t2.color}"></span>
                         <span class="text-xs font-bold leading-tight ${t2.isPlaceholder?'text-gray-300':''}">${m.t2}</span>
                     </div>
                 </div>
-                <div class="mt-3 text-center text-[10px] ${isLive?'text-red-500 font-bold live-pulse rounded-full py-0.5 bg-red-50':'text-gray-400'}">${m.status}</div>
+                <div class="mt-3 text-center text-[10px] ${isLive?'text-red-500 font-bold live-pulse rounded-full py-0.5 bg-red-50':'text-gray-400'}">${m.status || '-'}</div>
             </div>`;
         }
 
         function renderStandings(matches) {
             const container = document.getElementById('standings_container');
             container.innerHTML = '';
+            const layout = currentSport === 'FB_M' ? groupings.football : groupings.default;
             
             ['A', 'B'].forEach(group => {
                 const groupMatches = matches.filter(m => m.round === group);
                 const stats = {};
-
-                // ค้นหาทีมทั้งหมดในสาย
-                groupMatches.forEach(m => {
-                    [m.t1, m.t2].forEach(t => { if(!stats[t]) stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; });
-                });
-
-                // คำนวณเฉพาะแมตช์ที่จบแล้ว
-                groupMatches.filter(m => m.status === 'จบการแข่งขัน').forEach(m => {
+                if (layout[group]) { layout[group].forEach(t => { stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; }); }
+                groupMatches.forEach(m => { [m.t1, m.t2].forEach(t => { if(t && !stats[t]) stats[t] = { name: t, p: 0, w: 0, l: 0, pts: 0 }; }); });
+                groupMatches.filter(m => m.status && m.status.includes('จบ')).forEach(m => {
                     stats[m.t1].p++; stats[m.t2].p++;
                     if(m.s1 > m.s2) { stats[m.t1].w++; stats[m.t1].pts += 3; stats[m.t2].l++; }
                     else if(m.s2 > m.s1) { stats[m.t2].w++; stats[m.t2].pts += 3; stats[m.t1].l++; }
                     else { stats[m.t1].pts += 1; stats[m.t2].pts += 1; }
                 });
-
                 const sorted = Object.values(stats).sort((a, b) => b.pts - a.pts || b.w - a.w);
-
                 container.innerHTML += `
-                <div class="border rounded-xl overflow-hidden">
-                    <div class="bg-blue-50 py-2 px-4 text-center border-b font-bold text-blue-800 text-sm">สาย ${group}</div>
+                <div class="border rounded-xl overflow-hidden bg-white shadow-sm">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 py-2 px-4 text-center border-b font-bold text-indigo-800 text-sm">สาย ${group}</div>
                     <table class="w-full text-[11px] md:text-xs">
-                        <thead class="bg-gray-50 text-gray-400">
-                            <tr>
-                                <th class="py-2 pl-2 text-left font-medium">ทีม</th>
-                                <th class="text-center font-medium">ชนะ</th>
-                                <th class="text-center font-bold text-blue-600">แต้ม</th>
-                            </tr>
+                        <thead class="bg-gray-50 text-gray-500">
+                            <tr><th class="py-2 pl-3 text-left font-medium">ทีม</th><th class="text-center font-medium">ชนะ</th><th class="text-center font-bold text-blue-700">แต้ม</th></tr>
                         </thead>
-                        <tbody class="divide-y">
+                        <tbody class="divide-y divide-gray-100">
                             ${sorted.map((s, i) => {
                                 const stl = getTeam(s.name);
-                                return `<tr class="${i<2?'bg-green-50/50':''}">
-                                    <td class="py-2 pl-2 font-bold flex items-center">
-                                        <span class="w-3 inline-block text-gray-300 font-normal mr-1">${i+1}</span>
-                                        <span class="color-dot w-2 h-2 ${stl.isWhite?'border':''}" style="background:${stl.color}"></span>
-                                        <span class="truncate w-24">${s.name}</span>
+                                return `<tr class="${i<2?'bg-green-50/40':''} hover:bg-gray-50">
+                                    <td class="py-2 pl-3 font-bold flex items-center">
+                                        <span class="w-4 inline-block text-gray-400 font-normal mr-1">${i+1}.</span>
+                                        <span class="color-dot w-2 h-2 shadow-sm ${stl.isWhite?'border':''}" style="background:${stl.color}"></span>
+                                        <span class="truncate w-24 md:w-auto">${s.name}</span>
                                     </td>
-                                    <td class="text-center text-green-600">${s.w}</td>
-                                    <td class="text-center font-black text-blue-700 bg-blue-50/20">${s.pts}</td>
+                                    <td class="text-center text-green-600 font-medium">${s.w}</td>
+                                    <td class="text-center font-black text-blue-700 bg-blue-50/30">${s.pts}</td>
                                 </tr>`;
-                            }).join('') || '<tr><td colspan="3" class="py-4 text-center text-gray-300">รอยืนยันสาย</td></tr>'}
+                            }).join('')}
                         </tbody>
                     </table>
                 </div>`;
@@ -215,26 +308,26 @@
         function renderKnockout(matches) {
             const final = matches.filter(m => m.round.includes('ชิงชนะเลิศ'));
             const semi = matches.filter(m => m.round.includes('รองชนะเลิศ'));
-            
-            document.getElementById('final_container').innerHTML = final.length > 0 ? final.map(m => createMatchCard(m, true)).join('') : '<div class="text-center text-gray-300 text-sm py-6 bg-white/50 rounded-xl italic">รอยืนยันทีมคู่ชิงชนะเลิศ</div>';
-            document.getElementById('semifinal_container').innerHTML = semi.length > 0 ? semi.map(m => createMatchCard(m)).join('') : '<div class="text-center text-gray-300 text-sm py-6 bg-white/50 rounded-xl italic">รอยืนยันทีมคู่รองชนะเลิศ</div>';
+            document.getElementById('final_container').innerHTML = final.length > 0 ? final.map(m => createMatchCard(m, true)).join('') : '<div class="text-center text-orange-300 text-sm py-6 bg-white/50 rounded-xl font-medium border border-orange-100 border-dashed">รอยืนยันทีมคู่ชิงชนะเลิศ</div>';
+            document.getElementById('semifinal_container').innerHTML = semi.length > 0 ? semi.map(m => createMatchCard(m)).join('') : '<div class="text-center text-blue-300 text-sm py-6 bg-white/50 rounded-xl font-medium border border-blue-100 border-dashed">รอยืนยันทีมคู่รองชนะเลิศ</div>';
         }
 
         function renderAllMatches(matches) {
             const container = document.getElementById('all_matches_container');
-            container.innerHTML = matches.length > 0 ? matches.map(m => createMatchCard(m)).join('') : '<div class="text-center text-gray-400 py-10 italic">ยังไม่มีโปรแกรมแข่งขัน</div>';
+            container.innerHTML = matches.length > 0 ? matches.map(m => createMatchCard(m)).join('') : '<div class="text-center text-gray-400 py-10 bg-gray-50 rounded-xl">ยังไม่มีโปรแกรมแข่งขัน</div>';
         }
 
         function changeSport(id) {
             currentSport = id;
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
-            document.getElementById('tab_'+id).classList.add('tab-active');
+            document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active'); b.classList.add('text-gray-600'); });
+            const activeTab = document.getElementById('tab_'+id);
+            activeTab.classList.add('tab-active');
+            activeTab.classList.remove('text-gray-600');
             fetchData();
         }
 
-        // เริ่มต้นระบบ
         changeSport('VB_M');
-        setInterval(fetchData, 30000); // อัปเดตทุก 30 วินาที
+        setInterval(fetchData, 30000); 
     </script>
 </body>
 </html>
